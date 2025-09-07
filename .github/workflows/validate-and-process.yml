@@ -168,22 +168,21 @@ jobs:
 
       - name: Install dependencies (Self-hosted with Docker)
         if: needs.validate-host-config.outputs.requires_self_hosted == 'true'
+        shell: powershell
         run: |
-          echo "📦 Installing dependencies in Docker container"
-          docker run --rm \
-            --add-host host.docker.internal:host-gateway \
-            -v "$(pwd):/workspace" \
-            -w /workspace \
-            python:3.9-slim bash -c "
-            pip install --upgrade pip
-            if [ -f github/requirements.txt ]; then 
-              echo '📦 Installing dependencies from github/requirements.txt'
-              pip install -r github/requirements.txt
-            else
-              echo '⚠️  No requirements.txt found in github/ directory'
-            fi
-          "
-          echo "✅ Dependencies installed in Docker"
+          Write-Output "📦 Installing dependencies in Docker container"
+          docker run --rm `
+            --add-host host.docker.internal:host-gateway `
+            -v "${PWD}:/workspace" `
+            -w /workspace `
+            python:3.9-slim bash -c "pip install --upgrade pip && \
+              if [ -f github/requirements.txt ]; then \
+                echo '📦 Installing dependencies from github/requirements.txt'; \
+                pip install -r github/requirements.txt; \
+              else \
+                echo '⚠️  No requirements.txt found in github/ directory'; \
+              fi"
+          Write-Output "✅ Dependencies installed in Docker"
 
       - name: Validate challenge configuration (GitHub-hosted)
         if: needs.validate-host-config.outputs.requires_self_hosted != 'true'
