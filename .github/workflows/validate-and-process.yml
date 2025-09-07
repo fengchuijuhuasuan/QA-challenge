@@ -175,7 +175,7 @@ jobs:
             --add-host host.docker.internal:host-gateway `
             -v "${PWD}:/workspace" `
             -w /workspace `
-            python:3.9-slim bash -c "pip install --upgrade pip && if [ -f github/requirements.txt ]; then echo '📦 Installing dependencies from github/requirements.txt'; pip install -r github/requirements.txt; else echo '⚠️  No requirements.txt found in github/ directory'; fi"
+            python:3.9-slim bash -c "apt-get update && apt-get install -y ca-certificates && update-ca-certificates && pip install --upgrade pip && if [ -f github/requirements.txt ]; then echo '📦 Installing dependencies from github/requirements.txt'; pip install -r github/requirements.txt; else echo '⚠️ No requirements.txt found in github/ directory'; fi"
           Write-Output "✅ Dependencies installed in Docker"
 
       - name: Validate challenge configuration (GitHub-hosted)
