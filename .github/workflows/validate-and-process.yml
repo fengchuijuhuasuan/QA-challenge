@@ -93,31 +93,38 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Self-hosted runner requirements check
+        shell: pwsh
         run: |
-          echo "🏠 LOCAL DEVELOPMENT MODE DETECTED"
-          echo "=================================="
-          echo ""
+          Write-Host "🏠 LOCAL DEVELOPMENT MODE DETECTED"
+          Write-Host "=================================="
+          Write-Host ""
+
           # Check 1: Verify Docker is available
-          if ! docker info > /dev/null 2>&1; then
-            echo "❌ Docker is not available or not running on this self-hosted runner"
+          try {
+            docker info | Out-Null
+            Write-Host "✅ Docker is available"
+          } catch {
+            Write-Host "❌ Docker is not available or not running on this self-hosted runner"
             exit 1
-          else
-            echo "✅ Docker is available"
-          fi
+          }
 
           # Check 2: Test Docker Hub connectivity
-          if ! curl -s --connect-timeout 5 https://hub.docker.com > /dev/null; then
-            echo "⚠️  Warning: Cannot reach Docker Hub (network issue?)"
-          else
-            echo "✅ Docker Hub is accessible"
-          fi
+          try {
+            $response = Invoke-WebRequest -Uri "https://hub.docker.com" -TimeoutSec 5 -UseBasicParsing
+            if ($response.StatusCode -eq 200) {
+              Write-Host "✅ Docker Hub is accessible"
+            } else {
+              Write-Host "⚠️  Warning: Docker Hub returned status code $($response.StatusCode)"
+            }
+          } catch {
+            Write-Host "⚠️  Warning: Cannot reach Docker Hub (network issue?)"
+          }
 
-          echo ""
-          echo "📋 Next job will run on this self-hosted runner and verify:"
-          echo "   • Docker engine is running"
-          echo "   • Can pull python:3.9-slim image"
-          echo "   • EvalAI server connectivity"
-
+          Write-Host ""
+          Write-Host "📋 Next job will run on this self-hosted runner and verify:"
+          Write-Host "   • Docker engine is running"
+          Write-Host "   • Can pull python:3.9-slim image"
+          Write-Host "   • EvalAI server connectivity"
 
   process-evalai-challenge:
     needs: [validate-host-config, check-self-hosted-requirements]
