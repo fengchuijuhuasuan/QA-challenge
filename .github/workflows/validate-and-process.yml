@@ -191,22 +191,19 @@ jobs:
 
       - name: Validate challenge configuration (Self-hosted with Docker)
         if: needs.validate-host-config.outputs.requires_self_hosted == 'true'
+        shell: powershell
         run: |
-          echo "🔍 VALIDATING CHALLENGE CONFIGURATION (Docker)"
-          echo "==============================================="
-          docker run --rm \
-            --add-host host.docker.internal:host-gateway \
-            -v "$(pwd):/workspace" \
-            -w /workspace \
-            -e IS_VALIDATION='True' \
-            -e GITHUB_CONTEXT='${{ toJson(github) }}' \
-            -e GITHUB_REPOSITORY='${{ github.repository }}' \
-            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' \
-            python:3.9-slim \
-            bash -c "
-              pip install -r github/requirements.txt && 
-              python3 github/challenge_processing_script.py
-            "
+          Write-Output "🔍 VALIDATING CHALLENGE CONFIGURATION (Docker)"
+          Write-output "==============================================="
+          docker run --rm `
+            --add-host host.docker.internal:host-gateway `
+            -v "$(pwd):/workspace" `
+            -w /workspace `
+            -e IS_VALIDATION='True' `
+            -e GITHUB_CONTEXT='${{ toJson(github) }}' `
+            -e GITHUB_REPOSITORY='${{ github.repository }}' `
+            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' `
+            python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
 
       - name: Create or update challenge (GitHub-hosted)
         if: success() && needs.validate-host-config.outputs.requires_self_hosted != 'true'
@@ -221,19 +218,16 @@ jobs:
 
       - name: Create or update challenge (Self-hosted with Docker)
         if: success() && needs.validate-host-config.outputs.requires_self_hosted == 'true'
+        shell: powershell
         run: |
-          echo "🚀 CREATING/UPDATING CHALLENGE (Docker)"
-          echo "========================================"
-          docker run --rm \
-            --add-host host.docker.internal:host-gateway \
-            -v "$(pwd):/workspace" \
-            -w /workspace \
-            -e IS_VALIDATION='False' \
-            -e GITHUB_CONTEXT='${{ toJson(github) }}' \
-            -e GITHUB_REPOSITORY='${{ github.repository }}' \
-            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' \
-            python:3.9-slim \
-            bash -c "
-              pip install -r github/requirements.txt && 
-              python3 github/challenge_processing_script.py
-            "
+          Write-Output "🚀 CREATING/UPDATING CHALLENGE (Docker)"
+          Write-Output "========================================"
+          docker run --rm `
+            --add-host host.docker.internal:host-gateway `
+            -v "$(pwd):/workspace" `
+            -w /workspace `
+            -e IS_VALIDATION='False' `
+            -e GITHUB_CONTEXT='${{ toJson(github) }}' `
+            -e GITHUB_REPOSITORY='${{ github.repository }}' `
+            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' `
+            python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
