@@ -195,12 +195,14 @@ jobs:
         run: |
           Write-Output "🔍 VALIDATING CHALLENGE CONFIGURATION (Docker)"
           Write-output "==============================================="
+          $json = '${{ toJson(github) }}'
+          $base64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($json))
           docker run --rm `
             --add-host host.docker.internal:host-gateway `
             -v "${PWD}:/workspace" `
             -w /workspace `
             -e IS_VALIDATION=True `
-            -e GITHUB_CONTEXT=${{ toJson(github) }} `
+            -e GITHUB_CONTEXT_BASE64=$base64 `
             -e GITHUB_REPOSITORY=${{ github.repository }} `
             -e GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} `
             python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
@@ -222,12 +224,14 @@ jobs:
         run: |
           Write-Output "🚀 CREATING/UPDATING CHALLENGE (Docker)"
           Write-Output "========================================"
+          $json = '${{ toJson(github) }}'
+          $base64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($json))
           docker run --rm `
             --add-host host.docker.internal:host-gateway `
             -v "${PWD}:/workspace" `
             -w /workspace `
             -e IS_VALIDATION=False `
-            -e GITHUB_CONTEXT=${{ toJson(github) }} `
+            -e GITHUB_CONTEXT_BASE64=$base64 `
             -e GITHUB_REPOSITORY=${{ github.repository }} `
             -e GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} `
             python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
