@@ -197,12 +197,12 @@ jobs:
           Write-output "==============================================="
           docker run --rm `
             --add-host host.docker.internal:host-gateway `
-            -v "$(PWD):/workspace" `
+            -v "${PWD}:/workspace" `
             -w /workspace `
-            -e IS_VALIDATION='True' `
-            -e GITHUB_CONTEXT='${{ toJson(github) }}' `
-            -e GITHUB_REPOSITORY='${{ github.repository }}' `
-            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' `
+            -e IS_VALIDATION=True `
+            -e GITHUB_CONTEXT=${{ toJson(github) }} `
+            -e GITHUB_REPOSITORY=${{ github.repository }} `
+            -e GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} `
             python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
 
       - name: Create or update challenge (GitHub-hosted)
@@ -224,10 +224,10 @@ jobs:
           Write-Output "========================================"
           docker run --rm `
             --add-host host.docker.internal:host-gateway `
-            -v "$(PWD):/workspace" `
+            -v "${PWD}:/workspace" `
             -w /workspace `
-            -e IS_VALIDATION='False' `
-            -e GITHUB_CONTEXT='${{ toJson(github) }}' `
-            -e GITHUB_REPOSITORY='${{ github.repository }}' `
-            -e GITHUB_AUTH_TOKEN='${{ secrets.AUTH_TOKEN }}' `
+            -e IS_VALIDATION=False `
+            -e GITHUB_CONTEXT=${{ toJson(github) }} `
+            -e GITHUB_REPOSITORY=${{ github.repository }} `
+            -e GITHUB_AUTH_TOKEN=${{ secrets.AUTH_TOKEN }} `
             python:3.9-slim bash -c "pip install -r github/requirements.txt && python3 github/challenge_processing_script.py"
