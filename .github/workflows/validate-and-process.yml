@@ -93,7 +93,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Self-hosted runner requirements check
-        shell: pwsh
+        shell: powershell
         run: |
           Write-Host "🏠 LOCAL DEVELOPMENT MODE DETECTED"
           Write-Host "=================================="
