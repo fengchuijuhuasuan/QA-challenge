@@ -1,5 +1,5 @@
 {
-	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4ODc2NzAwMSwianRpIjoiZGQxOGQyODJmNDUxNDg1ZjhkMDUxZGI2ODgwYjk4NDUiLCJ1c2VyX2lkIjoyfQ.fgh8Xa5tZflvHnkxqDVlcqr5t58qwjuJC6renHp70xA",
-	"team_pk": "3",
+	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4OTcyMTE5MCwianRpIjoiOGQyNTc2MjUwYWQzNGVjNTk4MWNiNDg3OTE4MjY1ZDUiLCJ1c2VyX2lkIjoyfQ.srrl71_7FSyhmenu4LAvAbOLPqL8cURQ2ZQXP_jn-oE",
+	"team_pk": "2",
 	"evalai_host_url": "http://host.docker.internal:8000"
 }
